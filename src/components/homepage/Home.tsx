@@ -107,7 +107,7 @@ function Home() {
               <img
                 src={images[previousIndex]}
                 alt="Previous"
-                className={`absolute top-0 left-0 w-full h-full object-cover z-10 ${
+                className={`absolute top-0 left-0 w-full h-full object-contain z-10 ${
                   direction === "next"
                     ? "animate-oldLeft"
                     : "animate-oldRight"
@@ -118,7 +118,7 @@ function Home() {
             <img
               src={images[currentIndex]}
               alt="Slider"
-              className={`absolute top-0 left-0 w-full h-full object-cover z-0 ${
+              className={`absolute top-0 left-0 w-full h-full object-contain z-0 ${
                 isAnimating
                   ? direction === "next"
                     ? "animate-newRight"
