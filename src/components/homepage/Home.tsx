@@ -102,7 +102,7 @@ function Home() {
     <div className="bg-[#f7f7f8] overflow-x-hidden">
       <div className="bg-[#f7f7f8] relative">
         <div className="relative w-full">
-          <div className="relative w-full h-75 sm:h-95 md:h-115 lg:h-112.5 overflow-hidden">
+          <div className="relative w-full h-55 min-[480px]:h-[280px] sm:h-95 md:h-115 lg:h-112.5 overflow-hidden">
             {isAnimating && (
               <img
                 src={images[previousIndex]}
