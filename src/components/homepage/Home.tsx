@@ -108,7 +108,7 @@ function Home() {
         <div className="relative w-full">
           {/* Responsive main carousel */}
           <div
-            className="relative w-full h-auto sm:h-95 md:h-115 lg:h-112.5 overflow-hidden"
+            className="relative w-full h-auto sm:h-100 md:h-115 lg:h-112.5 overflow-hidden"
             style={{
               aspectRatio: mobileAspectRatio,
             }}
