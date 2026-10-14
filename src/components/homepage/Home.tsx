@@ -22,8 +22,12 @@ function Home() {
   const [instagramOpen, setInstagramOpen] = useState(false);
   const [instagramIndex, setInstagramIndex] = useState(0);
 
+  const [mobileAspectRatio, setMobileAspectRatio] = useState<number | undefined>(
+    undefined
+  );
+
   const changeImage = (dir: "next" | "prev") => {
-    if (isAnimating) return;
+    if (isAnimating || images.length <= 1) return;
 
     setDirection(dir);
     setPreviousIndex(currentIndex);
@@ -102,12 +106,27 @@ function Home() {
     <div className="bg-[#f7f7f8] overflow-x-hidden">
       <div className="bg-[#f7f7f8] relative">
         <div className="relative w-full">
-          <div className="relative w-full h-55 min-[480px]:h-[280px] sm:h-95 md:h-115 lg:h-112.5 overflow-hidden">
+          {/* Responsive main carousel */}
+          <div
+            className="relative w-full h-auto sm:h-95 md:h-115 lg:h-112.5 overflow-hidden"
+            style={{
+              aspectRatio: mobileAspectRatio,
+            }}
+          >
             {isAnimating && (
               <img
                 src={images[previousIndex]}
                 alt="Previous"
-                className={`absolute top-0 left-0 w-full h-full object-contain z-10 ${
+                onLoad={(event) => {
+                  const image = event.currentTarget;
+
+                  if (image.naturalWidth && image.naturalHeight) {
+                    setMobileAspectRatio(
+                      image.naturalWidth / image.naturalHeight
+                    );
+                  }
+                }}
+                className={`absolute inset-0 w-full h-full object-contain sm:object-cover z-10 ${
                   direction === "next"
                     ? "animate-oldLeft"
                     : "animate-oldRight"
@@ -118,7 +137,16 @@ function Home() {
             <img
               src={images[currentIndex]}
               alt="Slider"
-              className={`absolute top-0 left-0 w-full h-full object-contain z-0 ${
+              onLoad={(event) => {
+                const image = event.currentTarget;
+
+                if (image.naturalWidth && image.naturalHeight) {
+                  setMobileAspectRatio(
+                    image.naturalWidth / image.naturalHeight
+                  );
+                }
+              }}
+              className={`absolute inset-0 w-full h-full object-contain sm:object-cover z-0 ${
                 isAnimating
                   ? direction === "next"
                     ? "animate-newRight"
@@ -128,9 +156,11 @@ function Home() {
             />
           </div>
 
+          {/* Carousel buttons */}
           <div className="absolute right-5 sm:right-9 lg:right-9 bottom-4 sm:bottom-5 lg:-bottom-4 flex gap-1 z-10">
             <button
               onClick={() => changeImage("prev")}
+              aria-label="Previous slide"
               className="flex justify-center items-center bg-white cursor-pointer w-9 h-9 sm:w-10 sm:h-10 rounded-full shadow-[0_4px_8px_rgba(0,0,0,0.25)]"
             >
               <ChevronLeft size={20} />
@@ -138,6 +168,7 @@ function Home() {
 
             <button
               onClick={() => changeImage("next")}
+              aria-label="Next slide"
               className="flex justify-center items-center bg-white cursor-pointer w-9 h-9 sm:w-10 sm:h-10 rounded-full shadow-[0_4px_8px_rgba(0,0,0,0.25)]"
             >
               <ChevronRight size={20} />
@@ -303,7 +334,6 @@ function Home() {
           className="fixed inset-0 z-[100] bg-black/70 flex items-center justify-center p-3 sm:p-5"
           onClick={closeInstagram}
         >
-          {/* Modal wrapper: responsive on mobile, original dimensions on LG */}
           <div className="relative w-[90vw] h-[85dvh] max-h-[85dvh] lg:w-[900px] lg:h-[560px] lg:max-h-none">
             {/* Previous post */}
             <button
@@ -357,7 +387,7 @@ function Home() {
                 )}
               </div>
 
-              {/* Text content below media on mobile/tablet, right side on LG */}
+              {/* Text content */}
               <div className="w-full h-[55%] min-h-0 lg:w-[42%] lg:h-full bg-white p-4 sm:p-5 overflow-y-auto">
                 <div className="border-b border-gray-200 pb-4 pr-8">
                   <p className="text-sm">
