@@ -1,7 +1,14 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ChevronDown, ChevronLeft, ChevronRight, Heart } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  Heart,
+  SlidersHorizontal,
+  X,
+} from "lucide-react";
 import {
   products,
   saleFilters,
@@ -33,6 +40,7 @@ const Page = () => {
   const [page, setPage] = useState(1);
   const [sort, setSort] = useState("Recommended");
   const [favorites, setFavorites] = useState<number[]>([]);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   const toggleSection = (title: string) => {
     setOpenFilters((current) => ({
@@ -52,7 +60,8 @@ const Page = () => {
 
   const filteredProducts = useMemo(() => {
     let result = products.filter(
-      (product) => product.price >= appliedMin && product.price <= appliedMax,
+      (product) =>
+        product.price >= appliedMin && product.price <= appliedMax,
     );
 
     const filterGroups = [
@@ -126,16 +135,15 @@ const Page = () => {
     return result;
   }, [appliedMin, appliedMax, selectedFilters, sort]);
 
- const pageSize = 18;
-const totalPages = Math.min(
-  2,
-  Math.max(1, Math.ceil(filteredProducts.length / 18)),
-);
+  const totalPages = Math.min(
+    2,
+    Math.max(1, Math.ceil(filteredProducts.length / 18)),
+  );
 
-const visibleProducts =
-  page === 1
-    ? filteredProducts.slice(0, 18)
-    : filteredProducts.slice(18, 23);
+  const visibleProducts =
+    page === 1
+      ? filteredProducts.slice(0, 18)
+      : filteredProducts.slice(18, 23);
 
   const clearFilters = () => {
     setSelectedFilters([]);
@@ -150,7 +158,12 @@ const visibleProducts =
     const min = minPrice.trim() === "" ? 0 : Number(minPrice);
     const max = maxPrice.trim() === "" ? Infinity : Number(maxPrice);
 
-    if (!Number.isFinite(min) || min < 0 || Number.isNaN(max) || max < min) {
+    if (
+      !Number.isFinite(min) ||
+      min < 0 ||
+      Number.isNaN(max) ||
+      max < min
+    ) {
       return;
     }
 
@@ -163,13 +176,14 @@ const visibleProducts =
     title: string,
     items: { label: string; count: number }[],
   ) => (
-    <section className="border-b border-gray-200 py-3">
+    <section className="border-b border-gray-200 py-3" key={title}>
       <button
         type="button"
         onClick={() => toggleSection(title)}
         className="flex w-full items-center justify-between text-left font-bold"
       >
         <span>{title}</span>
+
         {openFilters[title] ? (
           <ChevronDown size={14} />
         ) : (
@@ -179,56 +193,141 @@ const visibleProducts =
 
       {openFilters[title] && (
         <div className="mt-3 space-y-2">
-          {items.map((item) => (
-            <label
-              key={item.label}
-              className="flex cursor-pointer items-center justify-between gap-2 text-sm text-gray-700"
-            >
-              <span className="flex min-w-0 items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={selectedFilters.includes(item.label)}
-                  onChange={() => toggleFilter(item.label)}
-                  className="h-3 w-3 shrink-0 accent-amber-500"
-                />
-                <span>{item.label}</span>
-              </span>
-              <span className="text-gray-500">
-                {
-                  products.filter((product) => {
-                    if (VihicletypeData.some((i) => i.label === item.label))
-                      return product.vehicle === item.label;
+          {items.map((item) => {
+            const count = products.filter((product) => {
+              if (VihicletypeData.some((i) => i.label === item.label)) {
+                return product.vehicle === item.label;
+              }
 
-                    if (completionFilters.some((i) => i.label === item.label))
-                      return product.completion === item.label;
+              if (completionFilters.some((i) => i.label === item.label)) {
+                return product.completion === item.label;
+              }
 
-                    if (scaleFilters.some((i) => i.label === item.label))
-                      return product.scale === item.label;
+              if (scaleFilters.some((i) => i.label === item.label)) {
+                return product.scale === item.label;
+              }
 
-                    if (brandFilters.some((i) => i.label === item.label))
-                      return product.brand === item.label;
+              if (brandFilters.some((i) => i.label === item.label)) {
+                return product.brand === item.label;
+              }
 
-                    if (seriesFilters.some((i) => i.label === item.label))
-                      return product.series === item.label;
+              if (seriesFilters.some((i) => i.label === item.label)) {
+                return product.series === item.label;
+              }
 
-                    if (saleFilters.some((i) => i.label === item.label)) {
-                      if (product.oldPrice === undefined) return false;
+              if (saleFilters.some((i) => i.label === item.label)) {
+                if (product.oldPrice === undefined) return false;
 
-                      return (
-                        Math.round(product.oldPrice - product.price) ===
-                        Number(item.label.match(/\\d+/)?.[0] ?? 0)
-                      );
-                    }
+                return (
+                  Math.round(product.oldPrice - product.price) ===
+                  Number(item.label.match(/\d+/)?.[0] ?? 0)
+                );
+              }
 
-                    return false;
-                  }).length
-                }
-              </span>
-            </label>
-          ))}
+              return false;
+            }).length;
+
+            return (
+              <label
+                key={item.label}
+                className="flex cursor-pointer items-center justify-between gap-2 text-sm text-gray-700"
+              >
+                <span className="flex min-w-0 items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={selectedFilters.includes(item.label)}
+                    onChange={() => toggleFilter(item.label)}
+                    className="h-3 w-3 shrink-0 accent-amber-500"
+                  />
+
+                  <span>{item.label}</span>
+                </span>
+
+                <span className="shrink-0 text-gray-500">{count}</span>
+              </label>
+            );
+          })}
         </div>
       )}
     </section>
+  );
+
+  const renderSidebarContent = () => (
+    <>
+      <section className="border-b border-gray-200 py-3">
+        <button
+          type="button"
+          onClick={() => toggleSection("Price")}
+          className="flex w-full items-center justify-between text-sm font-bold"
+        >
+          Price
+
+          {openFilters.Price ? (
+            <ChevronDown size={14} />
+          ) : (
+            <ChevronRight size={14} />
+          )}
+        </button>
+
+        {openFilters.Price && (
+          <div className="mt-3">
+            <div className="flex gap-2">
+              <label className="flex h-8 min-w-0 flex-1 items-center border border-gray-400 px-1.5">
+                <span className="mr-1 text-[10px] text-gray-500">£</span>
+
+                <input
+                  type="number"
+                  min="0"
+                  value={minPrice}
+                  onChange={(event) => setMinPrice(event.target.value)}
+                  className="w-full min-w-0 bg-transparent text-[10px] outline-none"
+                />
+              </label>
+
+              <label className="flex h-8 min-w-0 flex-1 items-center border border-gray-400 px-1.5">
+                <span className="mr-1 text-[10px] text-gray-500">£</span>
+
+                <input
+                  type="number"
+                  min="0"
+                  value={maxPrice}
+                  onChange={(event) => setMaxPrice(event.target.value)}
+                  className="w-full min-w-0 bg-transparent text-[10px] outline-none"
+                />
+              </label>
+            </div>
+
+            <button
+              type="button"
+              onClick={applyPrice}
+              className="mt-2 h-8 w-full rounded-sm bg-amber-500 text-[11px] font-medium hover:bg-amber-600"
+            >
+              Confirm
+            </button>
+          </div>
+        )}
+      </section>
+
+      {renderFilterSection("On Sale", saleFilters)}
+      {renderFilterSection("Vehicle Type", VihicletypeData)}
+      {renderFilterSection(
+        "Vehicle Completion Level",
+        completionFilters,
+      )}
+      {renderFilterSection("Vehicle Scale", scaleFilters)}
+      {renderFilterSection("Vehicle Licensed Brand", brandFilters)}
+      {renderFilterSection("Vehicle Series", seriesFilters)}
+
+      {selectedFilters.length > 0 && (
+        <button
+          type="button"
+          onClick={clearFilters}
+          className="mt-4 text-xs text-orange-600 underline"
+        >
+          Clear all filters
+        </button>
+      )}
+    </>
   );
 
   return (
@@ -237,87 +336,74 @@ const visibleProducts =
         <h1 className="text-[30px] font-extrabold leading-tight sm:text-[36px]">
           All RC Models
         </h1>
+
         <p className="mt-4 text-[12px] text-gray-600">
           Use the filter menu to find your desired model.
         </p>
       </div>
 
       <div className="mt-10 flex items-start gap-5 lg:gap-6">
-        <aside className="w-70 shrink-0 text-left max-lg:w-[220px] max-md:w-[180px] max-sm:w-[135px]">
-          <section className="border-b border-gray-200 py-3">
+        <aside className="hidden w-70 shrink-0 text-left max-lg:w-[220px] md:block">
+          {renderSidebarContent()}
+        </aside>
+
+        {mobileFiltersOpen && (
+          <div className="fixed inset-0 z-[100] md:hidden">
             <button
               type="button"
-              onClick={() => toggleSection("Price")}
-              className="flex w-full items-center justify-between text-sm font-bold"
-            >
-              Price
-              {openFilters.Price ? (
-                <ChevronDown size={14} />
-              ) : (
-                <ChevronRight size={14} />
-              )}
-            </button>
+              aria-label="Close filters"
+              onClick={() => setMobileFiltersOpen(false)}
+              className="absolute inset-0 h-full w-full bg-black/40"
+            />
 
-            {openFilters.Price && (
-              <div className="mt-3">
-                <div className="flex gap-2">
-                  <label className="flex h-8 min-w-0 flex-1 items-center border border-gray-400 px-1.5">
-                    <span className="mr-1 text-[10px] text-gray-500">£</span>
-                    <input
-                      type="number"
-                      min="0"
-                      value={minPrice}
-                      onChange={(event) => setMinPrice(event.target.value)}
-                      className="w-full min-w-0 bg-transparent text-[10px] outline-none"
-                    />
-                  </label>
-
-                  <label className="flex h-8 min-w-0 flex-1 items-center border border-gray-400 px-1.5">
-                    <span className="mr-1 text-[10px] text-gray-500">£</span>
-                    <input
-                      type="number"
-                      min="0"
-                      value={maxPrice}
-                      onChange={(event) => setMaxPrice(event.target.value)}
-                      className="w-full min-w-0 bg-transparent text-[10px] outline-none"
-                    />
-                  </label>
-                </div>
+            <aside className="absolute inset-y-0 left-0 flex w-[85vw] max-w-[340px] flex-col overflow-y-auto bg-white px-4 pb-6 text-left shadow-xl">
+              <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-200 bg-white py-4">
+                <h2 className="text-base font-bold">Filters</h2>
 
                 <button
                   type="button"
-                  onClick={applyPrice}
-                  className="mt-2 h-8 w-full rounded-sm bg-amber-500 text-[11px] font-medium hover:bg-amber-600"
+                  aria-label="Close filters"
+                  onClick={() => setMobileFiltersOpen(false)}
+                  className="flex h-8 w-8 items-center justify-center"
                 >
-                  Confirm
+                  <X size={20} />
                 </button>
               </div>
-            )}
-          </section>
 
-          {renderFilterSection("On Sale", saleFilters)}
-          {renderFilterSection("Vehicle Type", VihicletypeData)}
-          {renderFilterSection("Vehicle Completion Level", completionFilters)}
-          {renderFilterSection("Vehicle Scale", scaleFilters)}
-          {renderFilterSection("Vehicle Licensed Brand", brandFilters)}
-          {renderFilterSection("Vehicle Series", seriesFilters)}
+              {renderSidebarContent()}
 
-          {selectedFilters.length > 0 && (
-            <button
-              type="button"
-              onClick={clearFilters}
-              className="mt-4 text-xs text-orange-600 underline"
-            >
-              Clear all filters
-            </button>
-          )}
-        </aside>
+              <button
+                type="button"
+                onClick={() => setMobileFiltersOpen(false)}
+                className="mt-5 h-10 w-full rounded-sm bg-amber-500 text-sm font-semibold hover:bg-amber-600"
+              >
+                Show {filteredProducts.length} products
+              </button>
+            </aside>
+          </div>
+        )}
 
         <section className="min-w-0 flex-1">
           <div className="mb-3 flex flex-wrap items-center justify-end gap-2 text-[11px] text-gray-700">
+            <button
+              type="button"
+              onClick={() => setMobileFiltersOpen(true)}
+              className="mr-auto flex h-8 items-center gap-1.5 rounded-sm border border-gray-300 px-2.5 text-xs md:hidden"
+            >
+              <SlidersHorizontal size={14} />
+              Filters
+              {selectedFilters.length > 0 && (
+                <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-amber-500 px-1 text-[10px] text-black">
+                  {selectedFilters.length}
+                </span>
+              )}
+            </button>
+
             <span>{filteredProducts.length} items</span>
+
             <label className="flex items-center gap-1">
               Sort:
+
               <select
                 value={sort}
                 onChange={(event) => {
@@ -348,7 +434,7 @@ const visibleProducts =
                     }}
                   >
                     <div
-                      className="absolute inset-0 opacity-0 cursor-pointer transition-opacity duration-500 ease-in-out group-hover:opacity-100"
+                      className="absolute inset-0 cursor-pointer opacity-0 transition-opacity duration-500 ease-in-out group-hover:opacity-100"
                       style={{
                         backgroundImage: `url("${product.hoverImage}")`,
                         backgroundPosition: "center",
@@ -411,6 +497,7 @@ const visibleProducts =
                     <span className="text-[11px] font-bold text-red-600">
                       {money(product.price)}
                     </span>
+
                     {product.oldPrice !== undefined && (
                       <span className="text-[9px] text-gray-500 line-through">
                         {money(product.oldPrice)}
@@ -423,9 +510,11 @@ const visibleProducts =
           ) : (
             <div className="flex min-h-52 flex-col items-center justify-center text-center">
               <p className="text-sm font-semibold">No products found</p>
+
               <p className="mt-2 text-xs text-gray-500">
                 Try changing your filters or price range.
               </p>
+
               <button
                 type="button"
                 onClick={clearFilters}
@@ -464,8 +553,11 @@ const visibleProducts =
                 .map((number, index, array) => (
                   <span key={number} className="contents">
                     {index > 0 && array[index - 1] !== number - 1 && (
-                      <span className="px-1 text-xs text-gray-500">...</span>
+                      <span className="px-1 text-xs text-gray-500">
+                        ...
+                      </span>
                     )}
+
                     <button
                       type="button"
                       onClick={() => {
