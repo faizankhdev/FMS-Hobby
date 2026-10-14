@@ -1,13 +1,7 @@
-
 "use client";
 
 import { useMemo, useState } from "react";
-import {
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  Heart,
-} from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, Heart } from "lucide-react";
 import {
   products,
   saleFilters,
@@ -51,46 +45,44 @@ const Page = () => {
     setSelectedFilters((current) =>
       current.includes(label)
         ? current.filter((item) => item !== label)
-        : [...current, label]
+        : [...current, label],
     );
     setPage(1);
   };
 
   const filteredProducts = useMemo(() => {
     let result = products.filter(
-      (product) =>
-        product.price >= appliedMin &&
-        product.price <= appliedMax
+      (product) => product.price >= appliedMin && product.price <= appliedMax,
     );
 
     const filterGroups = [
       {
         labels: selectedFilters.filter((label) =>
-          VihicletypeData.some((item) => item.label === label)
+          VihicletypeData.some((item) => item.label === label),
         ),
         field: "vehicle",
       },
       {
         labels: selectedFilters.filter((label) =>
-          completionFilters.some((item) => item.label === label)
+          completionFilters.some((item) => item.label === label),
         ),
         field: "completion",
       },
       {
         labels: selectedFilters.filter((label) =>
-          scaleFilters.some((item) => item.label === label)
+          scaleFilters.some((item) => item.label === label),
         ),
         field: "scale",
       },
       {
         labels: selectedFilters.filter((label) =>
-          brandFilters.some((item) => item.label === label)
+          brandFilters.some((item) => item.label === label),
         ),
         field: "brand",
       },
       {
         labels: selectedFilters.filter((label) =>
-          seriesFilters.some((item) => item.label === label)
+          seriesFilters.some((item) => item.label === label),
         ),
         field: "series",
       },
@@ -100,14 +92,14 @@ const Page = () => {
       if (group.labels.length) {
         result = result.filter((product) =>
           group.labels.includes(
-            product[group.field as keyof typeof product] as string
-          )
+            product[group.field as keyof typeof product] as string,
+          ),
         );
       }
     }
 
     const selectedSales = selectedFilters.filter((label) =>
-      saleFilters.some((item) => item.label === label)
+      saleFilters.some((item) => item.label === label),
     );
 
     if (selectedSales.length) {
@@ -128,24 +120,22 @@ const Page = () => {
     } else if (sort === "Price: High to Low") {
       result = [...result].sort((a, b) => b.price - a.price);
     } else if (sort === "Name: A to Z") {
-      result = [...result].sort((a, b) =>
-        a.name.localeCompare(b.name)
-      );
+      result = [...result].sort((a, b) => a.name.localeCompare(b.name));
     }
 
     return result;
   }, [appliedMin, appliedMax, selectedFilters, sort]);
 
-  const pageSize = 18;
-  const totalPages = Math.max(
-    1,
-    Math.ceil(filteredProducts.length / pageSize)
-  );
+ const pageSize = 18;
+const totalPages = Math.min(
+  2,
+  Math.max(1, Math.ceil(filteredProducts.length / 18)),
+);
 
-  const visibleProducts = filteredProducts.slice(
-    (page - 1) * pageSize,
-    page * pageSize
-  );
+const visibleProducts =
+  page === 1
+    ? filteredProducts.slice(0, 18)
+    : filteredProducts.slice(18, 23);
 
   const clearFilters = () => {
     setSelectedFilters([]);
@@ -160,12 +150,7 @@ const Page = () => {
     const min = minPrice.trim() === "" ? 0 : Number(minPrice);
     const max = maxPrice.trim() === "" ? Infinity : Number(maxPrice);
 
-    if (
-      !Number.isFinite(min) ||
-      min < 0 ||
-      Number.isNaN(max) ||
-      max < min
-    ) {
+    if (!Number.isFinite(min) || min < 0 || Number.isNaN(max) || max < min) {
       return;
     }
 
@@ -176,7 +161,7 @@ const Page = () => {
 
   const renderFilterSection = (
     title: string,
-    items: { label: string; count: number }[]
+    items: { label: string; count: number }[],
   ) => (
     <section className="border-b border-gray-200 py-3">
       <button
@@ -209,33 +194,35 @@ const Page = () => {
                 <span>{item.label}</span>
               </span>
               <span className="text-gray-500">
-                {products.filter((product) => {
-                  if (VihicletypeData.some((i) => i.label === item.label))
-                    return product.vehicle === item.label;
+                {
+                  products.filter((product) => {
+                    if (VihicletypeData.some((i) => i.label === item.label))
+                      return product.vehicle === item.label;
 
-                  if (completionFilters.some((i) => i.label === item.label))
-                    return product.completion === item.label;
+                    if (completionFilters.some((i) => i.label === item.label))
+                      return product.completion === item.label;
 
-                  if (scaleFilters.some((i) => i.label === item.label))
-                    return product.scale === item.label;
+                    if (scaleFilters.some((i) => i.label === item.label))
+                      return product.scale === item.label;
 
-                  if (brandFilters.some((i) => i.label === item.label))
-                    return product.brand === item.label;
+                    if (brandFilters.some((i) => i.label === item.label))
+                      return product.brand === item.label;
 
-                  if (seriesFilters.some((i) => i.label === item.label))
-                    return product.series === item.label;
+                    if (seriesFilters.some((i) => i.label === item.label))
+                      return product.series === item.label;
 
-                  if (saleFilters.some((i) => i.label === item.label)) {
-                    if (product.oldPrice === undefined) return false;
+                    if (saleFilters.some((i) => i.label === item.label)) {
+                      if (product.oldPrice === undefined) return false;
 
-                    return (
-                      Math.round(product.oldPrice - product.price) ===
-                      Number(item.label.match(/\\d+/)?.[0] ?? 0)
-                    );
-                  }
+                      return (
+                        Math.round(product.oldPrice - product.price) ===
+                        Number(item.label.match(/\\d+/)?.[0] ?? 0)
+                      );
+                    }
 
-                  return false;
-                }).length}
+                    return false;
+                  }).length
+                }
               </span>
             </label>
           ))}
@@ -361,7 +348,7 @@ const Page = () => {
                     }}
                   >
                     <div
-                      className="absolute inset-0 opacity-0 transition-opacity duration-500 ease-in-out group-hover:opacity-100"
+                      className="absolute inset-0 opacity-0 cursor-pointer transition-opacity duration-500 ease-in-out group-hover:opacity-100"
                       style={{
                         backgroundImage: `url("${product.hoverImage}")`,
                         backgroundPosition: "center",
@@ -383,7 +370,7 @@ const Page = () => {
                         setFavorites((current) =>
                           current.includes(product.id)
                             ? current.filter((id) => id !== product.id)
-                            : [...current, product.id]
+                            : [...current, product.id],
                         )
                       }
                       className="absolute right-1.5 top-1.5 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-white/95 text-gray-500 shadow-sm transition-colors hover:text-orange-500"
@@ -472,7 +459,7 @@ const Page = () => {
                   (number) =>
                     number === 1 ||
                     number === totalPages ||
-                    Math.abs(number - page) <= 1
+                    Math.abs(number - page) <= 1,
                 )
                 .map((number, index, array) => (
                   <span key={number} className="contents">

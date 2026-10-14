@@ -1,5 +1,6 @@
 "use client";
-import { ChevronLeft, ChevronRight, Video, VideoIcon } from "lucide-react";
+
+import { ChevronLeft, ChevronRight, VideoIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import Heading from "../../constant/Heading";
 import {
@@ -8,10 +9,10 @@ import {
   homeVideoCard,
   instagramImages,
   LatestCard,
-  instagramPosts
+  instagramPosts,
+  images,
 } from "@/constant/HomeData";
 import { InstaIcon } from "@/constant/Svg";
-import { images } from "@/constant/HomeData";
 
 function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -19,7 +20,7 @@ function Home() {
   const [direction, setDirection] = useState<"next" | "prev">("next");
   const [isAnimating, setIsAnimating] = useState(false);
   const [instagramOpen, setInstagramOpen] = useState(false);
-const [instagramIndex, setInstagramIndex] = useState(0);
+  const [instagramIndex, setInstagramIndex] = useState(0);
 
   const changeImage = (dir: "next" | "prev") => {
     if (isAnimating) return;
@@ -51,25 +52,51 @@ const [instagramIndex, setInstagramIndex] = useState(0);
   }, [currentIndex, isAnimating]);
 
   const openInstagram = (index: number) => {
-  setInstagramIndex(index);
-  setInstagramOpen(true);
-};
+    setInstagramIndex(index);
+    setInstagramOpen(true);
+  };
 
+  const instagramNext = () => {
+    setInstagramIndex((prev) =>
+      prev === instagramPosts.length - 1 ? 0 : prev + 1
+    );
+  };
 
-const instagramNext = () => {
-  setInstagramIndex((prev) =>
-    prev === instagramPosts.length - 1 ? 0 : prev + 1
-  );
-};
-const instagramPrev = () => {
-  setInstagramIndex((prev) =>
-    prev === 0 ? instagramPosts.length - 1 : prev - 1
-  );
-};
+  const instagramPrev = () => {
+    setInstagramIndex((prev) =>
+      prev === 0 ? instagramPosts.length - 1 : prev - 1
+    );
+  };
 
-const closeInstagram = () => {
-  setInstagramOpen(false);
-};
+  const closeInstagram = () => {
+    setInstagramOpen(false);
+  };
+
+  useEffect(() => {
+    if (!instagramOpen) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") closeInstagram();
+
+      if (event.key === "ArrowRight") {
+        setInstagramIndex((prev) =>
+          prev < instagramPosts.length - 1 ? prev + 1 : prev
+        );
+      }
+
+      if (event.key === "ArrowLeft") {
+        setInstagramIndex((prev) => (prev > 0 ? prev - 1 : prev));
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [instagramOpen]);
 
   return (
     <div className="bg-[#f7f7f8] overflow-x-hidden">
@@ -81,7 +108,9 @@ const closeInstagram = () => {
                 src={images[previousIndex]}
                 alt="Previous"
                 className={`absolute top-0 left-0 w-full h-full object-cover z-10 ${
-                  direction === "next" ? "animate-oldLeft" : "animate-oldRight"
+                  direction === "next"
+                    ? "animate-oldLeft"
+                    : "animate-oldRight"
                 }`}
               />
             )}
@@ -169,7 +198,9 @@ const closeInstagram = () => {
               <button className="group relative mt-4 overflow-hidden rounded-3xl border-2 border-white px-4 sm:px-5 py-2 text-xs font-bold text-white">
                 <span className="absolute top-0 left-[120%] h-full w-1/20 skew-x-[-20deg] bg-white/30 opacity-90 transition-all duration-600 group-hover:left-[-50%]" />
 
-                <span className="relative z-10">{homeVideoCard.button}</span>
+                <span className="relative z-10">
+                  {homeVideoCard.button}
+                </span>
               </button>
             </div>
           </div>
@@ -240,13 +271,14 @@ const closeInstagram = () => {
         Tag @fmsmodel_uk on Instagram to share your RC fun
       </h2>
 
-      <section className="px-4 sm:px-6 mt-12 sm:mt-20 lg:mt-30">
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1 sm:gap-2">
+      {/* Instagram gallery */}
+      <section className="px-2 sm:px-4 lg:px-6 mt-12 lg:mt-30">
+        <div className="flex flex-wrap">
           {instagramImages.map((image, index) => (
             <div
               key={index}
               onClick={() => openInstagram(index)}
-              className="group cursor-pointer relative aspect-square sm:aspect-[4/5] lg:aspect-auto lg:h-70 bg-cover bg-center bg-no-repeat overflow-hidden"
+              className="group cursor-pointer relative w-1/2 sm:w-1/3 lg:w-1/4 h-40 sm:h-56 lg:h-70 bg-cover bg-center bg-no-repeat"
               style={{
                 backgroundImage: `url("${image}")`,
               }}
@@ -257,7 +289,7 @@ const closeInstagram = () => {
                 </div>
               </div>
 
-              <div className="absolute right-2 top-2 sm:right-4 sm:top-4 z-8 bg-gray-700 rounded-2xl p-1">
+              <div className="absolute right-2 top-2 sm:right-4 sm:top-4 lg:right-6 lg:top-6 z-8 bg-gray-700 rounded-2xl p-1">
                 <VideoIcon className="fill-[#bfbfc9] text-[#bfbfc9] w-4 h-4 sm:w-5 sm:h-5" />
               </div>
             </div>
@@ -265,48 +297,47 @@ const closeInstagram = () => {
         </div>
       </section>
 
+      {/* Instagram modal */}
       {instagramOpen && (
         <div
           className="fixed inset-0 z-[100] bg-black/70 flex items-center justify-center p-3 sm:p-5"
           onClick={closeInstagram}
         >
-          <div className="relative w-full max-w-225 h-auto max-h-[90dvh] sm:max-h-[85dvh]">
-
-            {/* LEFT ARROW */}
+          {/* Modal wrapper: responsive on mobile, original dimensions on LG */}
+          <div className="relative w-[90vw] h-[85dvh] max-h-[85dvh] lg:w-[900px] lg:h-[560px] lg:max-h-none">
+            {/* Previous post */}
             <button
               onClick={(e) => {
                 e.stopPropagation();
-
-                if (instagramIndex > 0) {
-                  instagramPrev();
-                }
+                instagramPrev();
               }}
               disabled={instagramIndex === 0}
-              className={`absolute left-1 sm:-left-5 lg:-left-14 top-1/2 -translate-y-1/2 z-[110] w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-white flex items-center justify-center shadow-md
-                ${
-                  instagramIndex === 0
-                    ? "opacity-30 cursor-not-allowed"
-                    : "cursor-pointer hover:bg-gray-100"
-                }`}
+              aria-label="Previous Instagram post"
+              className={`absolute left-1 sm:-left-12 lg:-left-14 top-1/2 -translate-y-1/2 z-[120] w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-white flex items-center justify-center shadow-md ${
+                instagramIndex === 0
+                  ? "opacity-30 cursor-not-allowed"
+                  : "cursor-pointer hover:bg-gray-100"
+              }`}
             >
               <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-black" />
             </button>
 
-            {/* MAIN MODAL */}
+            {/* Main modal */}
             <div
-              className="relative w-full max-h-[90dvh] sm:max-h-[85dvh] bg-white flex flex-col md:flex-row overflow-y-auto"
+              className="relative w-full h-full bg-white flex flex-col lg:flex-row overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* CLOSE BUTTON */}
+              {/* Close button */}
               <button
                 onClick={closeInstagram}
-                className="absolute right-2 top-2 sm:right-3 sm:top-3 z-50 text-gray-500 hover:text-black cursor-pointer"
+                aria-label="Close Instagram post"
+                className="absolute right-2 top-2 sm:right-3 sm:top-3 z-[130] text-gray-500 hover:text-black cursor-pointer bg-white/90 rounded-full w-8 h-8 flex items-center justify-center"
               >
                 <span className="text-3xl leading-none">×</span>
               </button>
 
-              {/* VIDEO / IMAGE */}
-              <div className="w-full md:w-[58%] h-[38vh] sm:h-[45vh] md:h-[min(85dvh,560px)] md:min-h-0 shrink-0 bg-black flex items-center justify-center overflow-hidden">
+              {/* Video or image */}
+              <div className="w-full h-[45%] shrink-0 lg:w-[58%] lg:h-full bg-black flex items-center justify-center overflow-hidden">
                 {instagramPosts[instagramIndex].type === "video" ? (
                   <video
                     key={instagramPosts[instagramIndex].src}
@@ -326,27 +357,24 @@ const closeInstagram = () => {
                 )}
               </div>
 
-              {/* TEXT */}
-              <div className="w-full md:w-[42%] md:flex-1 md:min-h-0 bg-white p-4 sm:p-5 overflow-y-auto">
+              {/* Text content below media on mobile/tablet, right side on LG */}
+              <div className="w-full h-[55%] min-h-0 lg:w-[42%] lg:h-full bg-white p-4 sm:p-5 overflow-y-auto">
                 <div className="border-b border-gray-200 pb-4 pr-8">
                   <p className="text-sm">
-                    View on{" "}
-                    <span className="text-blue-600">
-                      Instagram
-                    </span>
+                    View on <span className="text-blue-600">Instagram</span>
                   </p>
                 </div>
 
-                <div className="pt-5">
-                  <p className="text-xs text-blue-500 mb-4">
+                <div className="pt-4 sm:pt-5">
+                  <p className="text-xs text-blue-500 mb-3 sm:mb-4">
                     {instagramPosts[instagramIndex].date}
                   </p>
 
-                  <p className="text-sm leading-6 mb-5">
+                  <p className="text-sm leading-6 mb-4 sm:mb-5">
                     {instagramPosts[instagramIndex].title}
                   </p>
 
-                  <p className="text-sm leading-6 mb-5">
+                  <p className="text-sm leading-6 mb-4 sm:mb-5">
                     {instagramPosts[instagramIndex].description}
                   </p>
 
@@ -354,179 +382,44 @@ const closeInstagram = () => {
                     {instagramPosts[instagramIndex].challenge}
                   </p>
 
-                  <p className="text-sm leading-6 mb-5">
+                  <p className="text-sm leading-6 mb-4 sm:mb-5">
                     {instagramPosts[instagramIndex].challengeText}
                   </p>
 
-                  <p className="text-sm leading-6 mb-5">
-                    🔗 Learn more & enter here:
+                  <p className="text-sm leading-6 mb-4 sm:mb-5">
+                    🔗 Learn more &amp; enter here:
                     <br />
-
                     <span className="text-blue-600 break-all">
                       {instagramPosts[instagramIndex].link}
                     </span>
                   </p>
 
-                  <p className="text-sm leading-6 text-gray-600">
+                  <p className="text-sm leading-6 text-gray-600 break-words">
                     {instagramPosts[instagramIndex].hashtags}
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* RIGHT ARROW */}
+            {/* Next post */}
             <button
               onClick={(e) => {
                 e.stopPropagation();
-
-                if (instagramIndex < instagramPosts.length - 1) {
-                  instagramNext();
-                }
+                instagramNext();
               }}
               disabled={instagramIndex === instagramPosts.length - 1}
-              className={`absolute right-1 sm:-right-5 lg:-right-14 top-1/2 -translate-y-1/2 z-[110] w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-white flex items-center justify-center shadow-md
-                ${
-                  instagramIndex === instagramPosts.length - 1
-                    ? "opacity-30 cursor-not-allowed"
-                    : "cursor-pointer hover:bg-gray-100"
-                }`}
+              aria-label="Next Instagram post"
+              className={`absolute right-1 sm:-right-12 lg:-right-14 top-1/2 -translate-y-1/2 z-[120] w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-white flex items-center justify-center shadow-md ${
+                instagramIndex === instagramPosts.length - 1
+                  ? "opacity-30 cursor-not-allowed"
+                  : "cursor-pointer hover:bg-gray-100"
+              }`}
             >
               <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-black" />
             </button>
           </div>
         </div>
       )}
-{instagramOpen && (
-  <div
-    className="fixed inset-0 z-100 bg-black/70 flex items-center justify-center"
-    onClick={closeInstagram}
-  >
-    <div className="relative w-225 max-w-[90vw] h-140">
-
-      {/* LEFT ARROW */}
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-
-          if (instagramIndex > 0) {
-            instagramPrev();
-          }
-        }}
-        disabled={instagramIndex === 0}
-        className={`absolute -left-14 top-1/2 -translate-y-1/2 z-110 w-11 h-11 rounded-full bg-white flex items-center justify-center shadow-md
-          ${
-            instagramIndex === 0
-              ? "opacity-30 cursor-not-allowed"
-              : "cursor-pointer hover:bg-gray-100"
-          }`}
-      >
-        <ChevronLeft className="w-6 h-6 text-black" />
-      </button>
-
-      {/* MAIN MODAL */}
-      <div
-        className="relative w-full h-full bg-white flex"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* CLOSE BUTTON */}
-        <button
-          onClick={closeInstagram}
-          className="absolute right-3 top-3 z-50 text-gray-500 hover:text-black cursor-pointer"
-        >
-          <span className="text-3xl leading-none">×</span>
-        </button>
-
-        {/* VIDEO / IMAGE */}
-        <div className="w-[58%] h-full bg-black flex items-center justify-center overflow-hidden">
-          {instagramPosts[instagramIndex].type === "video" ? (
-            <video
-              key={instagramPosts[instagramIndex].src}
-              src={instagramPosts[instagramIndex].src}
-              className="w-full h-full object-contain"
-              controls
-              autoPlay
-              muted
-              playsInline
-            />
-          ) : (
-            <img
-              src={instagramPosts[instagramIndex].src}
-              alt="Instagram post"
-              className="w-full h-full object-contain"
-            />
-          )}
-        </div>
-
-        {/* TEXT */}
-        <div className="w-[42%] h-full bg-white p-5 overflow-y-auto">
-          <div className="border-b border-gray-200 pb-4 pr-8">
-            <p className="text-sm">
-              View on{" "}
-              <span className="text-blue-600">
-                Instagram
-              </span>
-            </p>
-          </div>
-
-          <div className="pt-5">
-            <p className="text-xs text-blue-500 mb-4">
-              {instagramPosts[instagramIndex].date}
-            </p>
-
-            <p className="text-sm leading-6 mb-5">
-              {instagramPosts[instagramIndex].title}
-            </p>
-
-            <p className="text-sm leading-6 mb-5">
-              {instagramPosts[instagramIndex].description}
-            </p>
-
-            <p className="text-sm leading-6 mb-1">
-              {instagramPosts[instagramIndex].challenge}
-            </p>
-
-            <p className="text-sm leading-6 mb-5">
-              {instagramPosts[instagramIndex].challengeText}
-            </p>
-
-            <p className="text-sm leading-6 mb-5">
-              🔗 Learn more & enter here:
-              <br />
-
-              <span className="text-blue-600 break-all">
-                {instagramPosts[instagramIndex].link}
-              </span>
-            </p>
-
-            <p className="text-sm leading-6 text-gray-600">
-              {instagramPosts[instagramIndex].hashtags}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* RIGHT ARROW */}
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-
-          if (instagramIndex < instagramPosts.length - 1) {
-            instagramNext();
-          }
-        }}
-        disabled={instagramIndex === instagramPosts.length - 1}
-        className={`absolute -right-14 top-1/2 -translate-y-1/2 z-110 w-11 h-11 rounded-full bg-white flex items-center justify-center shadow-md
-          ${
-            instagramIndex === instagramPosts.length - 1
-              ? "opacity-30 cursor-not-allowed"
-              : "cursor-pointer hover:bg-gray-100"
-          }`}
-      >
-        <ChevronRight className="w-6 h-6 text-black" />
-      </button>
-    </div>
-  </div>
-)}
     </div>
   );
 }
