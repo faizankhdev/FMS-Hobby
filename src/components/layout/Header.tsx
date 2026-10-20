@@ -52,8 +52,8 @@ const Header = () => {
   const [isFixed, setIsFixed] = useState(false);
 
   const texts = [
-    "30-day postage paid returns",
-    "Free shipping special for you",
+    "FMS New Release | FCX18 II Ford Bronco | Order Now ",
+    "Free Shipping Over £99 | Learn More ",
   ];
 
   useEffect(() => {
@@ -109,7 +109,7 @@ const Header = () => {
   return (
     <div className="relative bg-[#f7f7f8] border border-b-gray-200">
       {/* Announcement Bar */}
-      <div className="w-full min-h-9 bg-[#ff9900] text-gray-800 flex items-center px-2">
+      <div className="w-full h-9 bg-[#ff9900] text-gray-800 flex items-center px-2">
         <Carousel
           opts={{ loop: true }}
           className="w-full"

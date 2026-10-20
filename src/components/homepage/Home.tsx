@@ -331,10 +331,10 @@ function Home() {
       {/* Instagram modal */}
       {instagramOpen && (
         <div
-          className="fixed inset-0 z-[100] bg-black/70 flex items-center justify-center p-3 sm:p-5"
+          className="fixed inset-0 z-100 bg-black/70 flex items-center justify-center p-3 sm:p-5"
           onClick={closeInstagram}
         >
-          <div className="relative w-[90vw] h-[85dvh] max-h-[85dvh] lg:w-[900px] lg:h-[560px] lg:max-h-none">
+          <div className="relative w-[90vw] h-[85dvh] max-h-[85dvh] lg:w-225 lg:h-140 lg:max-h-none">
             {/* Previous post */}
             <button
               onClick={(e) => {
@@ -343,7 +343,7 @@ function Home() {
               }}
               disabled={instagramIndex === 0}
               aria-label="Previous Instagram post"
-              className={`absolute left-1 sm:-left-12 lg:-left-14 top-1/2 -translate-y-1/2 z-[120] w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-white flex items-center justify-center shadow-md ${
+              className={`absolute left-1 sm:-left-12 lg:-left-14 top-1/2 -translate-y-1/2 z-120 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-white flex items-center justify-center shadow-md ${
                 instagramIndex === 0
                   ? "opacity-30 cursor-not-allowed"
                   : "cursor-pointer hover:bg-gray-100"
@@ -361,7 +361,7 @@ function Home() {
               <button
                 onClick={closeInstagram}
                 aria-label="Close Instagram post"
-                className="absolute right-2 top-2 sm:right-3 sm:top-3 z-[130] text-gray-500 hover:text-black cursor-pointer bg-white/90 rounded-full w-8 h-8 flex items-center justify-center"
+                className="absolute right-2 top-2 sm:right-3 sm:top-3 z-130 text-gray-500 hover:text-black cursor-pointer bg-white/90 rounded-full w-8 h-8 flex items-center justify-center"
               >
                 <span className="text-3xl leading-none">×</span>
               </button>
@@ -424,7 +424,7 @@ function Home() {
                     </span>
                   </p>
 
-                  <p className="text-sm leading-6 text-gray-600 break-words">
+                  <p className="text-sm leading-6 text-gray-600 wrap-break-word">
                     {instagramPosts[instagramIndex].hashtags}
                   </p>
                 </div>
@@ -439,7 +439,7 @@ function Home() {
               }}
               disabled={instagramIndex === instagramPosts.length - 1}
               aria-label="Next Instagram post"
-              className={`absolute right-1 sm:-right-12 lg:-right-14 top-1/2 -translate-y-1/2 z-[120] w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-white flex items-center justify-center shadow-md ${
+              className={`absolute right-1 sm:-right-12 lg:-right-14 top-1/2 -translate-y-1/2 z-120 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-white flex items-center justify-center shadow-md ${
                 instagramIndex === instagramPosts.length - 1
                   ? "opacity-30 cursor-not-allowed"
                   : "cursor-pointer hover:bg-gray-100"

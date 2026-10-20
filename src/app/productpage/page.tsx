@@ -258,7 +258,7 @@ const Page = () => {
         <button
           type="button"
           onClick={() => toggleSection("Price")}
-          className="flex w-full items-center justify-between text-sm font-bold"
+          className="flex w-full items-center justify-between text-xl font-bold"
         >
           Price
 
@@ -333,7 +333,7 @@ const Page = () => {
   return (
     <main className="min-h-screen bg-[#f7f8fa] px-3 pb-20 text-black sm:px-5 lg:px-6">
       <div className="pt-5 text-center">
-        <h1 className="text-[30px] font-extrabold leading-tight sm:text-[36px]">
+        <h1 className="sm:text-[30px] font-extrabold leading-tight lg:text-[40px]">
           All RC Models
         </h1>
 
@@ -343,12 +343,12 @@ const Page = () => {
       </div>
 
       <div className="mt-10 flex items-start gap-5 lg:gap-6">
-        <aside className="hidden w-70 shrink-0 text-left max-lg:w-[220px] md:block">
+        <aside className="hidden w-70 shrink-0 text-left max-lg:w-55 md:block">
           {renderSidebarContent()}
         </aside>
 
         {mobileFiltersOpen && (
-          <div className="fixed inset-0 z-[100] md:hidden">
+          <div className="fixed inset-0 z-100 md:hidden">
             <button
               type="button"
               aria-label="Close filters"
@@ -356,7 +356,7 @@ const Page = () => {
               className="absolute inset-0 h-full w-full bg-black/40"
             />
 
-            <aside className="absolute inset-y-0 left-0 flex w-[85vw] max-w-[340px] flex-col overflow-y-auto bg-white px-4 pb-6 text-left shadow-xl">
+            <aside className="absolute inset-y-0 left-0 flex w-[85vw] max-w-85 flex-col overflow-y-auto bg-white px-4 pb-6 text-left shadow-xl">
               <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-200 bg-white py-4">
                 <h2 className="text-base font-bold">Filters</h2>
 
@@ -410,7 +410,7 @@ const Page = () => {
                   setSort(event.target.value);
                   setPage(1);
                 }}
-                className="max-w-[140px] bg-transparent font-medium outline-none"
+                className="max-w-35 bg-transparent font-medium outline-none"
               >
                 <option>Recommended</option>
                 <option>Price: Low to High</option>
@@ -423,9 +423,9 @@ const Page = () => {
           {visibleProducts.length > 0 ? (
             <div className="grid grid-cols-2 gap-x-3 gap-y-5 sm:grid-cols-2 md:grid-cols-3 lg:gap-x-4 lg:gap-y-6">
               {visibleProducts.map((product) => (
-                <article key={product.id} className="group min-w-0 text-left">
+                <article key={product.id} className=" min-w-0 text-left">
                   <div
-                    className="relative aspect-square w-full overflow-hidden rounded-md bg-white"
+                    className="relative group aspect-square w-full overflow-hidden rounded-md bg-white"
                     style={{
                       backgroundImage: `url("${product.image}")`,
                       backgroundPosition: "center",
@@ -444,7 +444,7 @@ const Page = () => {
                     />
 
                     {product.badge && (
-                      <span className="absolute left-1 top-1 z-10 max-w-[85%] rounded-sm bg-orange-500 px-1 py-0.5 text-[8px] font-bold leading-tight text-white">
+                      <span className="absolute left-1 top-1 z-10 max-w-[85%] rounded-sm bg-orange-600 px-2 py-1 text-[10px] font-bold leading-tight text-white">
                         {product.badge}
                       </span>
                     )}
@@ -465,7 +465,7 @@ const Page = () => {
                         size={13}
                         fill={
                           favorites.includes(product.id)
-                            ? "currentColor"
+                            ? "red"
                             : "none"
                         }
                       />
@@ -473,17 +473,17 @@ const Page = () => {
                   </div>
 
                   <div className="mt-2 flex h-4 items-center gap-1 overflow-hidden">
-                    <span className="text-[9px]">🚙</span>
-                    <span className="text-[9px]">🚗</span>
-                    <span className="text-[9px]">🚙</span>
+                    <span className="text-[10px]">🚙</span>
+                    <span className="text-[10px]">🚗</span>
+                    <span className="text-[10px]">🚙</span>
                   </div>
 
-                  <h2 className="mt-1 line-clamp-2 min-h-8 text-[10px] leading-[1.5] text-gray-800 sm:text-[11px]">
+                  <h2 className="mt-4 line-clamp-2 min-h-8 sm:text-sm md:text-[14px] leading-normal text-gray-800 ">
                     {product.name}
                   </h2>
 
                   <p
-                    className={`mt-1 flex items-center gap-1 text-[10px] font-semibold ${
+                    className={`mt-0 flex items-center gap-1 text-[12px] font-semibold ${
                       product.stock === "In stock"
                         ? "text-emerald-600"
                         : "text-orange-500"
@@ -509,16 +509,16 @@ const Page = () => {
             </div>
           ) : (
             <div className="flex min-h-52 flex-col items-center justify-center text-center">
-              <p className="text-sm font-semibold">No products found</p>
+              <p className="text-lg font-semibold">No products found</p>
 
-              <p className="mt-2 text-xs text-gray-500">
+              <p className="mt-2 text-lg text-gray-500">
                 Try changing your filters or price range.
               </p>
 
               <button
                 type="button"
                 onClick={clearFilters}
-                className="mt-3 text-xs text-orange-600 underline"
+                className="mt-3 text-lg cursor-pointer border px-3 rounded-lg bg-orange-500 text-white"
               >
                 Clear filters
               </button>
