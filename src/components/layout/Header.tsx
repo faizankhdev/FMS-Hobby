@@ -168,19 +168,19 @@ const Header = () => {
             <div className="group">
               <Link
                 className="text-[17.5px] font-bold hover:text-orange-400 hover:border-b hover:border-b-black py-3 z-20"
-                href="/"
+                href="/salepage"
               >
                 SALE
               </Link>
 
               <div
                 className={`absolute left-0 ${
-                  isFixed ? "top-16" : "top-28"
+                  isFixed ? "top-18" : "top-25"
                 } hidden w-full h-83.75 bg-white shadow-md z-40 group-hover:block`}
               >
                 <div className="flex gap-20 px-14 pt-8">
                   <Link
-                    href="/"
+                    href="/salepage"
                     className="w-62.5 text-center hover:text-amber-500"
                   >
                     <img
@@ -195,7 +195,7 @@ const Header = () => {
                   </Link>
 
                   <Link
-                    href="/"
+                    href="/getsalepage"
                     className="w-62.5 text-center hover:text-amber-500"
                   >
                     <img
@@ -485,25 +485,25 @@ const Header = () => {
             <div className="group">
               <Link
                 className="text-[17px] font-bold hover:text-orange-400 hover:border-b hover:border-b-black py-4"
-                href="/"
+                href="/discoverpage"
               >
                 DISCOVER
               </Link>
 
               <div
                 className={`absolute left-0 ${
-                  isFixed ? "top-16" : "top-28"
+                  isFixed ? "top-16" : "top-25.5"
                 } hidden w-full h-100 bg-white shadow-md z-40 group-hover:block`}
               >
                 <div className="flex px-8 pt-8 gap-6">
-                  <div className="w-[32%]">
-                    <h3 className="font-bold text-lg border-b border-gray-300 pb-2">
+                  <div className="w-[32%] flex flex-col">
+                   <Link href="/discoverpage" className="font-bold text-lg border-b border-gray-300 pb-2">
                       🚗 Pick Your Perfect RC Car
-                    </h3>
+                   </Link>
 
-                    <p className="mt-3 cursor-pointer hover:text-orange-500">
+                    <Link href="/carsforbeginners" className="mt-3 cursor-pointer block hover:text-orange-500">
                       RC Cars for Beginners
-                    </p>
+                    </Link>
 
                     <p className="mt-3 cursor-pointer hover:text-orange-500">
                       FCX Series
@@ -557,7 +557,7 @@ const Header = () => {
               <div
                 className={`absolute -left-135.75 ${
                   isFixed ? "top-12" : "top-12"
-                } hidden w-349 bg-white z-20 h-60 group-hover:block`}
+                } hidden w-screen bg-white z-20 h-60 group-hover:block`}
               >
                 <div className="flex px-8">
                   {helpdata.map((item, index) => (

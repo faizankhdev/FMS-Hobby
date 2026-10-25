@@ -2,7 +2,6 @@
 
 import { useMemo, useState } from "react";
 import {
-  ChevronDown,
   ChevronLeft,
   ChevronRight,
   Heart,
@@ -18,6 +17,8 @@ import {
   brandFilters,
   seriesFilters,
 } from "@/constant/ProductPageData";
+import { ProductSidebar } from "@/components/ProductSidebar";
+import Heading from "@/constant/Heading";
 
 const money = (price: number) => `£${price.toFixed(2)} GBP`;
 
@@ -172,179 +173,26 @@ const Page = () => {
     setPage(1);
   };
 
-  const renderFilterSection = (
-    title: string,
-    items: { label: string; count: number }[],
-  ) => (
-    <section className="border-b border-gray-200 py-3" key={title}>
-      <button
-        type="button"
-        onClick={() => toggleSection(title)}
-        className="flex w-full items-center justify-between text-left font-bold"
-      >
-        <span>{title}</span>
-
-        {openFilters[title] ? (
-          <ChevronDown size={14} />
-        ) : (
-          <ChevronRight size={14} />
-        )}
-      </button>
-
-      {openFilters[title] && (
-        <div className="mt-3 space-y-2">
-          {items.map((item) => {
-            const count = products.filter((product) => {
-              if (VihicletypeData.some((i) => i.label === item.label)) {
-                return product.vehicle === item.label;
-              }
-
-              if (completionFilters.some((i) => i.label === item.label)) {
-                return product.completion === item.label;
-              }
-
-              if (scaleFilters.some((i) => i.label === item.label)) {
-                return product.scale === item.label;
-              }
-
-              if (brandFilters.some((i) => i.label === item.label)) {
-                return product.brand === item.label;
-              }
-
-              if (seriesFilters.some((i) => i.label === item.label)) {
-                return product.series === item.label;
-              }
-
-              if (saleFilters.some((i) => i.label === item.label)) {
-                if (product.oldPrice === undefined) return false;
-
-                return (
-                  Math.round(product.oldPrice - product.price) ===
-                  Number(item.label.match(/\d+/)?.[0] ?? 0)
-                );
-              }
-
-              return false;
-            }).length;
-
-            return (
-              <label
-                key={item.label}
-                className="flex cursor-pointer items-center justify-between gap-2 text-sm text-gray-700"
-              >
-                <span className="flex min-w-0 items-center gap-2">
-                  <input
-                    type="checkbox"
-                    checked={selectedFilters.includes(item.label)}
-                    onChange={() => toggleFilter(item.label)}
-                    className="h-3 w-3 shrink-0 accent-amber-500"
-                  />
-
-                  <span>{item.label}</span>
-                </span>
-
-                <span className="shrink-0 text-gray-500">{count}</span>
-              </label>
-            );
-          })}
-        </div>
-      )}
-    </section>
-  );
-
-  const renderSidebarContent = () => (
-    <>
-      <section className="border-b border-gray-200 py-3">
-        <button
-          type="button"
-          onClick={() => toggleSection("Price")}
-          className="flex w-full items-center justify-between text-xl font-bold"
-        >
-          Price
-
-          {openFilters.Price ? (
-            <ChevronDown size={14} />
-          ) : (
-            <ChevronRight size={14} />
-          )}
-        </button>
-
-        {openFilters.Price && (
-          <div className="mt-3">
-            <div className="flex gap-2">
-              <label className="flex h-8 min-w-0 flex-1 items-center border border-gray-400 px-1.5">
-                <span className="mr-1 text-[10px] text-gray-500">£</span>
-
-                <input
-                  type="number"
-                  min="0"
-                  value={minPrice}
-                  onChange={(event) => setMinPrice(event.target.value)}
-                  className="w-full min-w-0 bg-transparent text-[10px] outline-none"
-                />
-              </label>
-
-              <label className="flex h-8 min-w-0 flex-1 items-center border border-gray-400 px-1.5">
-                <span className="mr-1 text-[10px] text-gray-500">£</span>
-
-                <input
-                  type="number"
-                  min="0"
-                  value={maxPrice}
-                  onChange={(event) => setMaxPrice(event.target.value)}
-                  className="w-full min-w-0 bg-transparent text-[10px] outline-none"
-                />
-              </label>
-            </div>
-
-            <button
-              type="button"
-              onClick={applyPrice}
-              className="mt-2 h-8 w-full rounded-sm bg-amber-500 text-[11px] font-medium hover:bg-amber-600"
-            >
-              Confirm
-            </button>
-          </div>
-        )}
-      </section>
-
-      {renderFilterSection("On Sale", saleFilters)}
-      {renderFilterSection("Vehicle Type", VihicletypeData)}
-      {renderFilterSection(
-        "Vehicle Completion Level",
-        completionFilters,
-      )}
-      {renderFilterSection("Vehicle Scale", scaleFilters)}
-      {renderFilterSection("Vehicle Licensed Brand", brandFilters)}
-      {renderFilterSection("Vehicle Series", seriesFilters)}
-
-      {selectedFilters.length > 0 && (
-        <button
-          type="button"
-          onClick={clearFilters}
-          className="mt-4 text-xs text-orange-600 underline"
-        >
-          Clear all filters
-        </button>
-      )}
-    </>
-  );
+  const sidebarProps = {
+    openFilters,
+    toggleSection,
+    minPrice,
+    setMinPrice,
+    maxPrice,
+    setMaxPrice,
+    applyPrice,
+    selectedFilters,
+    toggleFilter,
+    clearFilters,
+  };
 
   return (
     <main className="min-h-screen bg-[#f7f8fa] px-3 pb-20 text-black sm:px-5 lg:px-6">
-      <div className="pt-5 text-center">
-        <h1 className="sm:text-[30px] font-extrabold leading-tight lg:text-[40px]">
-          All RC Models
-        </h1>
-
-        <p className="mt-4 text-[12px] text-gray-600">
-          Use the filter menu to find your desired model.
-        </p>
-      </div>
+      <Heading heading="All RC Cars" para="Use the filter menu to find your desired model."/>
 
       <div className="mt-10 flex items-start gap-5 lg:gap-6">
         <aside className="hidden w-70 shrink-0 text-left max-lg:w-55 md:block">
-          {renderSidebarContent()}
+          <ProductSidebar {...sidebarProps} />
         </aside>
 
         {mobileFiltersOpen && (
@@ -370,7 +218,7 @@ const Page = () => {
                 </button>
               </div>
 
-              {renderSidebarContent()}
+              <ProductSidebar {...sidebarProps} />
 
               <button
                 type="button"
@@ -423,7 +271,7 @@ const Page = () => {
           {visibleProducts.length > 0 ? (
             <div className="grid grid-cols-2 gap-x-3 gap-y-5 sm:grid-cols-2 md:grid-cols-3 lg:gap-x-4 lg:gap-y-6">
               {visibleProducts.map((product) => (
-                <article key={product.id} className=" min-w-0 text-left">
+                <article key={product.id} className="min-w-0 text-left">
                   <div
                     className="relative group aspect-square w-full overflow-hidden rounded-md bg-white"
                     style={{
@@ -472,13 +320,13 @@ const Page = () => {
                     </button>
                   </div>
 
-                  <div className="mt-2 flex h-4 items-center gap-1 overflow-hidden">
-                    <span className="text-[10px]">🚙</span>
-                    <span className="text-[10px]">🚗</span>
-                    <span className="text-[10px]">🚙</span>
+                  <div className="mt-3 flex h-8 items-center gap-2 overflow-hidden">
+                    <img className="w-7 border rounded-full h-7 bg-gray-600" src="/images/productpageimages/cardsmallimage1.webp" alt="" />
+                    <img className="w-7 border rounded-full h-7 bg-gray-600" src="/images/productpageimages/cardsmallimage2.webp" alt="" />
+                    <img className="w-7 border rounded-full h-7 bg-gray-600" src="/images/productpageimages/cardsmallimage3.webp" alt="" />
                   </div>
 
-                  <h2 className="mt-4 line-clamp-2 min-h-8 sm:text-sm md:text-[14px] leading-normal text-gray-800 ">
+                  <h2 className="mt-4 line-clamp-2 min-h-8 sm:text-sm md:text-[14px] leading-normal text-gray-800">
                     {product.name}
                   </h2>
 
