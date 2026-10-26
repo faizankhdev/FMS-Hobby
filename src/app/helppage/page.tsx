@@ -23,13 +23,13 @@ const page = () => {
         <div className="mt-8 lg:mt-0">
           {helppagedata.map((item, index) => (
             <div
-              className="flex flex-col items-center px-4 py-6 gap-5 sm:flex-row sm:items-start sm:gap-6 sm:px-6 lg:flex-row lg:items-center lg:gap-0 lg:pl-55 lg:py-0"
+              className="flex flex-col items-center justify-center px-4 py-6 gap-5 sm:flex-row sm:items-start sm:gap-6 sm:px-6 lg:flex-row lg:items-center lg:gap-0 lg:pl-55 lg:py-0"
               key={index}
             >
               <img
                 src={item.image}
                 alt=""
-                className="w-full max-w-[220px] h-auto object-contain sm:w-40 sm:shrink-0 lg:w-auto lg:max-w-none"
+                className="w-full max-w-55 h-auto object-contain sm:w-40 sm:shrink-0 lg:w-auto lg:max-w-none"
               />
 
               <div className="w-full min-w-0 text-left text-gray-800 sm:pl-2 lg:pl-10">
