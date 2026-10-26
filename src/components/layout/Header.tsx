@@ -49,6 +49,8 @@ const Header = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [mobileMenu, setMobileMenu] = useState(false);
   const [activeProduct, setActiveProduct] = useState("rc");
+  const [activeMobileDropdown, setActiveMobileDropdown] = useState("");
+  const [activeMobileProduct, setActiveMobileProduct] = useState("rc");
   const [isFixed, setIsFixed] = useState(false);
 
   const texts = [
@@ -753,8 +755,8 @@ const Header = () => {
       {mobileMenu && (
         <div
           className={`lg:hidden fixed inset-x-0 bottom-0 ${
-            isFixed ? "top-20" : "top-[116px] sm:top-28"
-          } z-[60] bg-white overflow-y-auto shadow-xl border-t border-gray-200`}
+            isFixed ? "top-20" : "top-29 sm:top-28"
+          } z-60 bg-white overflow-y-auto shadow-xl border-t border-gray-200`}
         >
           {/* Mobile Search */}
           <Link
@@ -766,56 +768,402 @@ const Header = () => {
             <span className="text-sm">Search products</span>
           </Link>
 
-          {/* Main Links */}
           <nav className="flex flex-col">
-            <Link
-              href="/"
-              onClick={() => setMobileMenu(false)}
-              className="px-5 py-4 text-base font-bold border-b border-gray-200 hover:text-orange-500"
-            >
-              SALE
-            </Link>
+            {/* SALE */}
+            <div className="border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <Link
+                  href="/salepage"
+                  onClick={() => setMobileMenu(false)}
+                  className="px-5 py-4 text-base font-bold hover:text-orange-500"
+                >
+                  SALE
+                </Link>
+                <button
+                  type="button"
+                  aria-label="Toggle Sale menu"
+                  aria-expanded={activeMobileDropdown === "sale"}
+                  onClick={() =>
+                    setActiveMobileDropdown(
+                      activeMobileDropdown === "sale" ? "" : "sale"
+                    )
+                  }
+                  className="px-5 py-4"
+                >
+                  {activeMobileDropdown === "sale" ? (
+                    <ChevronDown size={19} />
+                  ) : (
+                    <ChevronRight size={19} />
+                  )}
+                </button>
+              </div>
 
-            <Link
-              href="/productpage"
-              onClick={() => setMobileMenu(false)}
-              className="flex items-center justify-between px-5 py-4 text-base font-bold border-b border-gray-200 hover:text-orange-500"
-            >
-              PRODUCTS
-              <ChevronRight size={19} />
-            </Link>
-
-            <Link
-              href="/"
-              onClick={() => setMobileMenu(false)}
-              className="px-5 py-4 text-base font-bold border-b border-gray-200 hover:text-orange-500"
-            >
-              DISCOVER
-            </Link>
-
-            <div className="px-5 py-4 border-b border-gray-200">
-              <h3 className="font-bold text-base mb-3">HELP</h3>
-
-              <div className="grid grid-cols-2 gap-3">
-                {helpdata.map((item, index) => (
+              {activeMobileDropdown === "sale" && (
+                <div className="px-5 pb-4 grid grid-cols-2 gap-4">
                   <Link
-                    key={index}
-                    href="/"
+                    href="/salepage"
                     onClick={() => setMobileMenu(false)}
-                    className="flex flex-col items-center text-center p-2 border border-gray-100 hover:text-orange-500"
+                    className="text-center hover:text-orange-500"
                   >
                     <img
-                      src={item.scr}
-                      alt=""
-                      className="w-14 h-14 object-contain"
+                      src="/images/saleimage1.webp"
+                      alt="RC Car Sale"
+                      className="w-full aspect-square object-cover"
                     />
-
-                    <span className="text-sm mt-2">
-                      {item.heading}
-                    </span>
+                    <p className="mt-2 font-semibold">RC Car Sale</p>
                   </Link>
-                ))}
+                  <Link
+                    href="/getsalepage"
+                    onClick={() => setMobileMenu(false)}
+                    className="text-center hover:text-orange-500"
+                  >
+                    <img
+                      src="/images/saleimage2.webp"
+                      alt="Buy 1 Get 1 FREE"
+                      className="w-full aspect-square object-cover"
+                    />
+                    <p className="mt-2 font-semibold">Buy 1 Get 1 FREE</p>
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {/* PRODUCTS */}
+            <div className="border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <Link
+                  href="/productpage"
+                  onClick={() => setMobileMenu(false)}
+                  className="px-5 py-4 text-base font-bold hover:text-orange-500"
+                >
+                  PRODUCTS
+                </Link>
+                <button
+                  type="button"
+                  aria-label="Toggle Products menu"
+                  aria-expanded={activeMobileDropdown === "products"}
+                  onClick={() =>
+                    setActiveMobileDropdown(
+                      activeMobileDropdown === "products" ? "" : "products"
+                    )
+                  }
+                  className="px-5 py-4"
+                >
+                  {activeMobileDropdown === "products" ? (
+                    <ChevronDown size={19} />
+                  ) : (
+                    <ChevronRight size={19} />
+                  )}
+                </button>
               </div>
+
+              {activeMobileDropdown === "products" && (
+                <div className="px-5 pb-4">
+                  {/* RC Cars & Trucks */}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setActiveMobileProduct(
+                        activeMobileProduct === "rc" ? "" : "rc"
+                      )
+                    }
+                    className="w-full flex items-center justify-between py-3 border-b border-gray-100"
+                  >
+                    <span className="flex items-center gap-2">
+                      <CarFront size={20} />
+                      RC Cars &amp; Trucks
+                    </span>
+                    {activeMobileProduct === "rc" ? (
+                      <ChevronDown size={18} />
+                    ) : (
+                      <ChevronRight size={18} />
+                    )}
+                  </button>
+
+                  {activeMobileProduct === "rc" && (
+                    <div className="py-3 pl-3">
+                      <h3 className="font-bold border-b pb-2">
+                        RC Vehicle Types
+                      </h3>
+                      {[
+                        "Rock Crawlers",
+                        "Short Course Trucks",
+                        "Monster Trucks",
+                        "Scale Trucks",
+                        "Mini/Micros Cars",
+                      ].map((item) => (
+                        <p key={item} className="mt-3 text-sm">{item}</p>
+                      ))}
+
+                      <Link
+                        href="/productpage"
+                        onClick={() => setMobileMenu(false)}
+                        className="inline-block mt-4 bg-orange-400 text-white px-4 py-2 rounded-full"
+                      >
+                        View All RC Cars
+                      </Link>
+
+                      <h3 className="font-bold border-b pb-2 mt-5">
+                        RC Vehicle Scales
+                      </h3>
+                      {["1:24 Scale", "1:18 Scale", "1:10 Scale", "1:6 Scale"].map(
+                        (item) => (
+                          <p key={item} className="mt-3 text-sm">{item}</p>
+                        )
+                      )}
+
+                      <h3 className="font-bold border-b pb-2 mt-5">
+                        Realistic Collection
+                      </h3>
+                      {["Land Rover", "Toyota", "Mercedes-Benz", "Chevrolet"].map(
+                        (item) => (
+                          <p key={item} className="mt-3 text-sm">{item}</p>
+                        )
+                      )}
+
+                      <div className="grid grid-cols-2 gap-3 mt-4">
+                        {[
+                          "/images/productcar1.webp",
+                          "/images/productcar2.webp",
+                          "/images/productcar3.webp",
+                        ].map((src) => (
+                          <Link
+                            key={src}
+                            href="/productpage"
+                            onClick={() => setMobileMenu(false)}
+                          >
+                            <img
+                              src={src}
+                              alt="RC vehicle"
+                              className="w-full object-cover"
+                            />
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Parts & Accessories */}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setActiveMobileProduct(
+                        activeMobileProduct === "parts" ? "" : "parts"
+                      )
+                    }
+                    className="w-full flex items-center justify-between py-3 border-b border-gray-100"
+                  >
+                    <span className="flex items-center gap-2">
+                      <Search size={20} />
+                      Parts &amp; Accessories
+                    </span>
+                    {activeMobileProduct === "parts" ? (
+                      <ChevronDown size={18} />
+                    ) : (
+                      <ChevronRight size={18} />
+                    )}
+                  </button>
+
+                  {activeMobileProduct === "parts" && (
+                    <div className="py-3 pl-3">
+                      <h3 className="font-bold border-b pb-2">
+                        Car &amp; Truck Parts
+                      </h3>
+                      {[
+                        "FCX24 Upgrades",
+                        "RC Car Decorations",
+                        "Transmitter Sets",
+                        "Batteries",
+                        "Motors",
+                        "ESCs",
+                        "LED Lights",
+                      ].map((item) => (
+                        <p key={item} className="mt-3 text-sm">{item}</p>
+                      ))}
+
+                      <h3 className="font-bold border-b pb-2 mt-5">
+                        FMS Merchandise
+                      </h3>
+                      {[
+                        "All FMS Merchandise",
+                        "Tools & Accessories",
+                        "FMS Life",
+                      ].map((item) => (
+                        <p key={item} className="mt-3 text-sm">{item}</p>
+                      ))}
+
+                      <div className="grid grid-cols-2 gap-3 mt-4">
+                        {[
+                          "/images/partimage1.webp",
+                          "/images/partimage2.webp",
+                          "/images/partimage3.webp",
+                        ].map((src) => (
+                          <Link
+                            key={src}
+                            href="/productpage"
+                            onClick={() => setMobileMenu(false)}
+                          >
+                            <img
+                              src={src}
+                              alt="Parts and accessories"
+                              className="w-full object-cover"
+                            />
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* E-Gift Cards */}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setActiveMobileProduct(
+                        activeMobileProduct === "gift" ? "" : "gift"
+                      )
+                    }
+                    className="w-full flex items-center justify-between py-3"
+                  >
+                    <span className="flex items-center gap-2">
+                      <Gift size={20} />
+                      E-Gift Cards
+                    </span>
+                    {activeMobileProduct === "gift" ? (
+                      <ChevronDown size={18} />
+                    ) : (
+                      <ChevronRight size={18} />
+                    )}
+                  </button>
+
+                  {activeMobileProduct === "gift" && (
+                    <div className="pl-3 pb-3">
+                      <Link
+                        href="/productpage"
+                        onClick={() => setMobileMenu(false)}
+                        className="text-sm hover:text-orange-500"
+                      >
+                        View E-Gift Cards
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* DISCOVER */}
+            <div className="border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <Link
+                  href="/discoverpage"
+                  onClick={() => setMobileMenu(false)}
+                  className="px-5 py-4 text-base font-bold hover:text-orange-500"
+                >
+                  DISCOVER
+                </Link>
+                <button
+                  type="button"
+                  aria-label="Toggle Discover menu"
+                  aria-expanded={activeMobileDropdown === "discover"}
+                  onClick={() =>
+                    setActiveMobileDropdown(
+                      activeMobileDropdown === "discover" ? "" : "discover"
+                    )
+                  }
+                  className="px-5 py-4"
+                >
+                  {activeMobileDropdown === "discover" ? (
+                    <ChevronDown size={19} />
+                  ) : (
+                    <ChevronRight size={19} />
+                  )}
+                </button>
+              </div>
+
+              {activeMobileDropdown === "discover" && (
+                <div className="px-5 pb-4">
+                  <h3 className="font-bold border-b pb-2">
+                    🚗 Pick Your Perfect RC Car
+                  </h3>
+                  <Link
+                    href="/carsforbeginners"
+                    onClick={() => setMobileMenu(false)}
+                    className="block mt-3 text-sm hover:text-orange-500"
+                  >
+                    RC Cars for Beginners
+                  </Link>
+                  <p className="mt-3 text-sm">FCX Series</p>
+
+                  <h3 className="font-bold border-b pb-2 mt-5">
+                    🌟 Share More Fun
+                  </h3>
+                  <p className="mt-3 text-sm">Adventurer Program</p>
+                  <p className="mt-3 text-sm">E-Gift Cards</p>
+                  <p className="mt-3 text-sm">Become an Affiliate</p>
+
+                  <div className="grid grid-cols-2 gap-3 mt-4">
+                    <img
+                      src="/images/productcar1.webp"
+                      alt="Pick Your Perfect RC Car"
+                      className="w-full object-cover"
+                    />
+                    <img
+                      src="/images/productcar2.webp"
+                      alt="FCX Series"
+                      className="w-full object-cover"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* HELP */}
+            <div className="border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <Link
+                  href="/"
+                  onClick={() => setMobileMenu(false)}
+                  className="px-5 py-4 text-base font-bold hover:text-orange-500"
+                >
+                  HELP
+                </Link>
+                <button
+                  type="button"
+                  aria-label="Toggle Help menu"
+                  aria-expanded={activeMobileDropdown === "help"}
+                  onClick={() =>
+                    setActiveMobileDropdown(
+                      activeMobileDropdown === "help" ? "" : "help"
+                    )
+                  }
+                  className="px-5 py-4"
+                >
+                  {activeMobileDropdown === "help" ? (
+                    <ChevronDown size={19} />
+                  ) : (
+                    <ChevronRight size={19} />
+                  )}
+                </button>
+              </div>
+
+              {activeMobileDropdown === "help" && (
+                <div className="px-5 pb-4 grid grid-cols-2 gap-3">
+                  {helpdata.map((item, index) => (
+                    <Link
+                      key={index}
+                      href="/"
+                      onClick={() => setMobileMenu(false)}
+                      className="flex flex-col items-center text-center p-3 border border-gray-100 hover:text-orange-500"
+                    >
+                      <img
+                        src={item.scr}
+                        alt={item.heading}
+                        className="w-14 h-14 object-contain"
+                      />
+                      <span className="text-sm mt-2">{item.heading}</span>
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
           </nav>
 
@@ -829,7 +1177,6 @@ const Header = () => {
               <Heart size={20} />
               <span>Wishlist</span>
             </Link>
-
             <Link
               href="/login"
               onClick={() => setMobileMenu(false)}
@@ -838,7 +1185,6 @@ const Header = () => {
               <UserIcon size={20} />
               <span>Login / My Account</span>
             </Link>
-
             <Link
               href="/orders"
               onClick={() => setMobileMenu(false)}
@@ -847,7 +1193,6 @@ const Header = () => {
               <Package size={20} />
               <span>My Orders</span>
             </Link>
-
             <Link
               href="/productpage"
               onClick={() => setMobileMenu(false)}
@@ -863,19 +1208,15 @@ const Header = () => {
             <a href="https://www.facebook.com/" aria-label="Facebook">
               <FaFacebookF size={18} />
             </a>
-
             <a href="https://www.instagram.com/" aria-label="Instagram">
               <FaInstagram size={19} />
             </a>
-
             <a href="https://www.tiktok.com/" aria-label="TikTok">
               <FaTiktok size={18} />
             </a>
-
             <a href="https://www.youtube.com/" aria-label="YouTube">
               <FaYoutube size={20} />
             </a>
-
             <Gamepad2 size={20} />
           </div>
         </div>
