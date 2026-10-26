@@ -551,7 +551,7 @@ const Header = () => {
             <div className="group relative">
               <Link
                 className="text-[17px] font-bold hover:text-orange-400 hover:border-b hover:border-b-black py-6"
-                href="/"
+                href="/helppage"
               >
                 HELP
               </Link>
@@ -559,7 +559,7 @@ const Header = () => {
               <div
                 className={`absolute -left-135.75 ${
                   isFixed ? "top-12" : "top-12"
-                } hidden w-screen bg-white z-20 h-60 group-hover:block`}
+                } hidden w-351 bg-white z-20 h-60 group-hover:block`}
               >
                 <div className="flex px-8">
                   {helpdata.map((item, index) => (
@@ -1120,7 +1120,7 @@ const Header = () => {
             <div className="border-b border-gray-200">
               <div className="flex items-center justify-between">
                 <Link
-                  href="/"
+                  href="/helppage"
                   onClick={() => setMobileMenu(false)}
                   className="px-5 py-4 text-base font-bold hover:text-orange-500"
                 >
