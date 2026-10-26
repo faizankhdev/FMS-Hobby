@@ -23,7 +23,7 @@ const page = () => {
         <div className="mt-8 lg:mt-0">
           {helppagedata.map((item, index) => (
             <div
-              className="flex flex-col items-center px-4 py-6 gap-5 sm:flex-row sm:items-center sm:gap-6 sm:px-6 lg:flex-row lg:items-center lg:gap-0 lg:pl-55 lg:py-0"
+              className="flex flex-col items-center px-4 py-6 gap-5 sm:flex-row sm:items-center sm:justify-center sm:gap-6 sm:px-6 lg:flex-row lg:items-center lg:gap-0 lg:pl-55 lg:py-0"
               key={index}
             >
               <img
