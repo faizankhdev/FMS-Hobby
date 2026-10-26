@@ -23,16 +23,16 @@ const page = () => {
         <div className="mt-8 lg:mt-0">
           {helppagedata.map((item, index) => (
             <div
-              className="flex flex-col items-center px-4 py-6 gap-5 sm:flex-row sm:items-center sm:justify-center sm:gap-6 sm:px-6 lg:flex-row lg:items-center lg:gap-0 lg:pl-55 lg:py-0"
+              className="flex flex-col items-center text-center px-4 py-6 gap-5 sm:px-6 lg:flex-row lg:items-center lg:text-left lg:gap-0 lg:pl-55 lg:py-0"
               key={index}
             >
               <img
                 src={item.image}
                 alt=""
-                className="w-full max-w-55 h-auto object-contain sm:w-40 sm:shrink-0 lg:w-auto lg:max-w-none"
+                className="w-full max-w-55 h-auto object-contain sm:max-w-60 lg:w-auto lg:max-w-none"
               />
 
-              <div className="w-full min-w-0 text-left text-gray-800 sm:pl-2 lg:pl-10">
+              <div className="w-full min-w-0 text-center text-gray-800 lg:text-left lg:pl-10">
                 <h2 className="text-xl font-extrabold sm:text-2xl lg:text-2xl">
                   {item.heading}
                 </h2>
@@ -47,7 +47,7 @@ const page = () => {
                 )}
 
                 {index !== 0 && (
-                  <button className="mt-4 flex items-center gap-3 sm:gap-6 border-b text-base sm:text-lg">
+                  <button className="mt-4 mx-auto lg:mx-0 flex items-center justify-center gap-3 sm:gap-6 border-b text-base sm:text-lg">
                     {item.button}
                     <ChevronsRight className="w-4 h-4 shrink-0" />
                   </button>
